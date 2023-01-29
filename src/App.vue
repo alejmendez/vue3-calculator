@@ -1,8 +1,9 @@
 <script setup>
+import Calculator from './components/Calculator.vue';
 </script>
 
 <template>
-  Hello World
+  <Calculator />
 </template>
 
 <style scoped>
