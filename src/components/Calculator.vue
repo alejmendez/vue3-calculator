@@ -1,53 +1,12 @@
 <script setup>
 import { ref } from 'vue';
 import Button from './Button.vue';
+import { addCharacterToEquation } from '../services/calculator';
 
 const result = ref('0');
-const operators = ['+', '-', '*', '/',];
-const resultLimit = 12;
 
-const isOperator = (key) => operators.includes(key);
-const isDot = (key) => key === '.';
-
-const specialFunctions = {
-  'all-clear': () => {
-    result.value = '0';
-  },
-  '=':  () => {
-    const lastChar = result.value.substring(result.value.length - 1);
-    if (isOperator(lastChar) || isDot(lastChar) || result.value === '0') {
-      return;
-    }
-    let resultString = String(eval(result.value)).substring(0, resultLimit);
-    if (resultString === 'NaN') {
-      resultString = 'Error';
-    }
-    result.value = resultString;
-  },
-};
-const specialFunctionsKeys = Object.keys(specialFunctions);
-
-const handleButtonClick = (key) => {
-  if (specialFunctionsKeys.includes(key)) {
-    return specialFunctions[key]();
-  }
-
-  if (result.value === '0' && !isOperator(key) && !isDot(key)) {
-    result.value = key;
-    return;
-  }
-
-  const lastChar = result.value.substring(result.value.length - 1);
-  if (isOperator(lastChar) && isOperator(key)) {
-    result.value = result.value.substring(0, result.value.length - 1) + key;
-    return;
-  }
-
-  if (isDot(key) && (isDot(lastChar) || isOperator(lastChar))) {
-    return;
-  }
-
-  result.value += key;
+const handleButtonClick = key => {
+  result.value = addCharacterToEquation(result.value, key);
 }
 </script>
 
